@@ -1,0 +1,201 @@
+{% doc %}
+  Renders a portfolio project section with a large image area and an interactive
+  right-side panel. Clicking the project title cycles through nested images.
+  After 4 clicks the description area is revealed.
+
+  Nested blocks of type 'portfolio-image' are used to manage project images.
+
+  @example
+  {% content_for 'block', type: 'portfolio-project', id: 'project-1' %}
+{% enddoc %}
+
+<section
+  id="project-{{ block.id }}"
+  class="portfolio-project"
+  {{ block.shopify_attributes }}
+>
+  <div class="portfolio-project__images">
+    {% content_for 'blocks' %}
+  </div>
+
+  <div class="portfolio-project__meta">
+    <button
+      type="button"
+      class="portfolio-project__title"
+      aria-label="{{ block.settings.title }}"
+    >
+      {{- block.settings.title | default: 'Project' -}}
+    </button>
+
+    <div class="portfolio-project__details" hidden>
+      {%- unless block.settings.brand == blank -%}
+        <p class="portfolio-project__brand">{{ block.settings.brand }}</p>
+      {%- endunless -%}
+      {%- unless block.settings.year == blank -%}
+        <p class="portfolio-project__year">{{ block.settings.year }}</p>
+      {%- endunless -%}
+      {%- unless block.settings.description == blank -%}
+        <p class="portfolio-project__description">{{ block.settings.description }}</p>
+      {%- endunless -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  /* ── Image visibility ──────────────────────────────────────────────────
+     portfolio-image.liquid sets display:none on all .portfolio-image divs.
+     This rule shows the first one as a CSS-only fallback (editor, no-JS).
+     When JS runs it takes over with inline element.style.display.
+  ── */
+  .portfolio-project__images .portfolio-image:first-child {
+    display: block;
+  }
+
+  .portfolio-project {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    align-items: start;
+    padding: 6rem var(--page-margin, 2rem) 6rem;
+    gap: 4rem;
+    scroll-margin-top: 5rem;
+    border-top: 1px solid #e8e8e8;
+  }
+
+  .portfolio-project__meta {
+    padding-top: 0.5rem;
+    position: sticky;
+    top: 7rem;
+  }
+
+  .portfolio-project__title {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 0.875rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    color: #000;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    text-transform: uppercase;
+  }
+
+  .portfolio-project__title:hover {
+    opacity: 0.4;
+  }
+
+  .portfolio-project__details {
+    margin-top: 3rem;
+  }
+
+  .portfolio-project__details[hidden] {
+    display: none;
+  }
+
+  .portfolio-project__brand {
+    font-size: 0.875rem;
+    margin: 0 0 0.25rem;
+    color: #000;
+    font-weight: 400;
+  }
+
+  .portfolio-project__year {
+    font-size: 0.75rem;
+    margin: 0 0 2rem;
+    color: #000;
+    opacity: 0.35;
+  }
+
+  .portfolio-project__description {
+    font-size: 0.8rem;
+    line-height: 1.8;
+    margin: 0;
+    color: #000;
+    opacity: 0.7;
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function () {
+    function initProjects() {
+      document.querySelectorAll('.portfolio-project').forEach(function (project) {
+        var images = Array.from(
+          project.querySelectorAll('.portfolio-project__images .portfolio-image')
+        );
+        var title = project.querySelector('.portfolio-project__title');
+        var details = project.querySelector('.portfolio-project__details');
+        var currentIndex = 0;
+        var clickCount = 0;
+
+        if (!title || images.length === 0) return;
+
+        /* Use inline styles — these override CSS rules (incl. :first-child
+           fallback) without needing class juggling or !important. */
+        images.forEach(function (img, idx) {
+          img.style.display = idx === 0 ? 'block' : 'none';
+        });
+
+        title.addEventListener('click', function () {
+          if (images.length < 2) return;
+
+          clickCount++;
+
+          images[currentIndex].style.display = 'none';
+          currentIndex = (currentIndex + 1) % images.length;
+          images[currentIndex].style.display = 'block';
+
+          if (clickCount >= 4 && details) {
+            details.removeAttribute('hidden');
+          }
+        });
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initProjects);
+    } else {
+      initProjects();
+    }
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "t:general.project",
+  "blocks": [{ "type": "@theme" }],
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:labels.title",
+      "default": "Project title"
+    },
+    {
+      "type": "image_picker",
+      "id": "carousel_image",
+      "label": "t:labels.carousel_image"
+    },
+    {
+      "type": "text",
+      "id": "brand",
+      "label": "t:labels.brand"
+    },
+    {
+      "type": "text",
+      "id": "year",
+      "label": "t:labels.year"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "t:labels.description"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:general.project"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,1 @@
+/Users/gozalishvilisem/Desktop/Tuzun/tuzun-theme/AGENTS.md

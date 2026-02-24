@@ -1,0 +1,204 @@
+<div class="portfolio">
+
+  {%- comment -%} ── Scatter carousel ─────────────────────────────────────────
+    Iterate every portfolio-project block, then every nested portfolio-image
+    block inside it. Each image becomes one carousel slide. Both scenes are
+    pre-rendered in HTML so the carousel is visible even without JavaScript.
+  {%- endcomment -%}
+
+  {%- assign carousel_count = 0 -%}
+  {%- for project_block in section.blocks -%}
+    {%- if project_block.type == 'portfolio-project' -%}
+      {%- for image_block in project_block.blocks -%}
+        {%- if image_block.type == 'portfolio-image' and image_block.settings.image -%}
+          {%- assign carousel_count = carousel_count | plus: 1 -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- if carousel_count > 0 -%}
+    <nav class="portfolio-carousel" aria-label="Projects">
+
+      {%- comment -%} Scene A – starts on-screen {%- endcomment -%}
+      <div class="portfolio-carousel__scene" id="pc-scene-a">
+        {%- for project_block in section.blocks -%}
+          {%- if project_block.type == 'portfolio-project' -%}
+            {%- for image_block in project_block.blocks -%}
+              {%- if image_block.type == 'portfolio-image' and image_block.settings.image -%}
+                <a class="portfolio-carousel__slide" href="#project-{{ project_block.id }}">
+                  {{- image_block.settings.image | image_url: width: 800 | image_tag: loading: 'lazy', alt: image_block.settings.image.alt -}}
+                </a>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      {%- comment -%} Scene B – identical slides, off-screen; JS applies a different scatter cycle {%- endcomment -%}
+      <div class="portfolio-carousel__scene" id="pc-scene-b">
+        {%- for project_block in section.blocks -%}
+          {%- if project_block.type == 'portfolio-project' -%}
+            {%- for image_block in project_block.blocks -%}
+              {%- if image_block.type == 'portfolio-image' and image_block.settings.image -%}
+                <a class="portfolio-carousel__slide" href="#project-{{ project_block.id }}">
+                  {{- image_block.settings.image | image_url: width: 800 | image_tag: loading: 'lazy', alt: image_block.settings.image.alt -}}
+                </a>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+    </nav>
+  {%- endif -%}
+
+  {%- comment -%} ── Project sections ──────────────────────────────────────── {%- endcomment -%}
+  <div class="portfolio-projects">
+    {%- content_for 'blocks' -%}
+  </div>
+
+</div>
+
+{% stylesheet %}
+  html {
+    scroll-behavior: smooth;
+  }
+
+  .portfolio {
+    padding-top: 5rem;
+  }
+
+  /* ── Carousel container ── */
+  .portfolio-carousel {
+    position: relative;
+    overflow: hidden;
+    height: 80vh;
+  }
+
+  /* ── Each scene fills the container absolutely ── */
+  .portfolio-carousel__scene {
+    position: absolute;
+    inset: 0;
+    transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  /* ── Individual scattered slides ── */
+  .portfolio-carousel__slide {
+    position: absolute;
+    display: block;
+    text-decoration: none;
+    transform: rotate(var(--r, 0deg));
+    transform-origin: center center;
+  }
+
+  .portfolio-carousel__slide img {
+    display: block;
+    width: 100%;
+    height: 36vh;
+    object-fit: cover;
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function () {
+
+    /* ── Scatter position formula ────────────────────────────────────────
+       Deterministic: same seed → same layout every time.
+       Different cycle → completely different scatter arrangement.
+    ── */
+    function scatter(i, cycle) {
+      var h = i * 47 + cycle * 83;
+      return {
+        left:     3  + (h * 137 % 77),  /* 3 – 79 % */
+        top:      5  + (h * 53  % 40),  /* 5 – 44 % */
+        rotation: (h * 17  % 30) - 15,  /* -15 – +14 ° */
+        width:    15 + (h * 11  % 8),   /* 15 – 22 vw */
+        zIndex:   1  + (h * 7   % 6)    /* 1 – 6 */
+      };
+    }
+
+    /* Apply scatter positions to slides already rendered in the DOM */
+    function applyScatter(scene, cycle) {
+      scene.querySelectorAll('.portfolio-carousel__slide').forEach(function (slide, i) {
+        var p = scatter(i, cycle);
+        slide.style.left   = p.left  + '%';
+        slide.style.top    = p.top   + '%';
+        slide.style.width  = p.width + 'vw';
+        slide.style.zIndex = p.zIndex;
+        slide.style.setProperty('--r', p.rotation + 'deg');
+      });
+    }
+
+    function init() {
+      var sceneA = document.getElementById('pc-scene-a');
+      var sceneB = document.getElementById('pc-scene-b');
+      if (!sceneA || !sceneB) return;
+
+      if (sceneA.querySelectorAll('.portfolio-carousel__slide').length === 0) return;
+
+      var cycle = 0;
+
+      /* Apply initial scatter and position scenes */
+      applyScatter(sceneA, cycle);
+      sceneA.style.transform = 'translateX(0)';
+
+      applyScatter(sceneB, cycle + 1);
+      sceneB.style.transition = 'none';
+      sceneB.style.transform  = 'translateX(-100%)';
+
+      var current = sceneA;
+      var next    = sceneB;
+
+      /* Auto-advance every 3 s */
+      setInterval(function () {
+        cycle++;
+
+        /* Re-scatter the waiting scene with the new cycle */
+        applyScatter(next, cycle);
+
+        /* Snap it off-screen left instantly (no transition) */
+        next.style.transition = 'none';
+        next.style.transform  = 'translateX(-100%)';
+
+        /* Two rAF calls ensure the browser has committed the snap
+           before we re-enable transitions and start animating */
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            current.style.transition = '';
+            next.style.transition    = '';
+
+            /* Current exits right; next enters from left */
+            current.style.transform = 'translateX(100%)';
+            next.style.transform    = 'translateX(0)';
+
+            var tmp = current;
+            current = next;
+            next    = tmp;
+          });
+        });
+      }, 3000);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Portfolio",
+  "blocks": [
+    { "type": "@theme" }
+  ],
+  "presets": [
+    {
+      "name": "Portfolio"
+    }
+  ]
+}
+{% endschema %}

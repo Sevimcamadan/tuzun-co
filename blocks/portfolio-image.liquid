@@ -1,0 +1,60 @@
+{% doc %}
+  Renders a single project image within a portfolio project block.
+  Must be nested inside a portfolio-project block.
+
+  @example
+  {% content_for 'block', type: 'portfolio-image', id: 'img-1' %}
+{% enddoc %}
+
+<div
+  class="portfolio-image"
+  {%- if block.settings.image -%}
+    data-carousel-src="{{ block.settings.image | image_url: width: 600 }}"
+  {%- endif -%}
+  {{ block.shopify_attributes }}
+>
+  {%- if block.settings.image -%}
+    {{ block.settings.image | image_url: width: 1600 | image_tag: loading: 'lazy', alt: block.settings.image.alt }}
+  {%- else -%}
+    {{ 'image' | placeholder_svg_tag: 'portfolio-image__placeholder' }}
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .portfolio-image {
+    display: none;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .portfolio-image.is-active {
+    display: block;
+  }
+
+  .portfolio-image img,
+  .portfolio-image svg {
+    width: 100%;
+    height: auto;
+    max-height: 80vh;
+    display: block;
+    object-fit: contain;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.image",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:labels.image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:general.image"
+    }
+  ]
+}
+{% endschema %}
