@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir:*)",
+      "Bash(cat:*)",
+      "Bash(wc:*)",
+      "Bash(shopify version:*)",
+      "Bash(node --version:*)",
+      "Bash(shopify theme init:*)",
+      "Bash(shopify theme dev:*)",
+      "Bash(shopify theme push:*)",
+      "Bash(shopify theme list:*)"
+    ]
+  }
+}

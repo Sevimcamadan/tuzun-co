@@ -10,11 +10,96 @@
 {
   "sections": {
     "main": {
-      "type": "hello-world",
+      "type": "scattered-images",
       "settings": {}
+    },
+    "revolver_carousel_LqBKdE": {
+      "type": "revolver-carousel",
+      "blocks": {
+        "slide_6TjbkU": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/media-and-entertainment-bold-4-top.jpg",
+            "title": "test 7",
+            "url": "",
+            "description": "Testing tüzün slider",
+            "image_2": "shopify://shop_images/media-and-entertainment-bold-1-top.jpg",
+            "image_3": "shopify://shop_images/media-and-entertainment-bold-2-middle.jpg"
+          }
+        },
+        "slide_wzHdpn": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2025-05-12_at_12.43.38_PM.png",
+            "title": "test 6",
+            "url": "",
+            "description": "test6"
+          }
+        },
+        "slide_zne7bK": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2026-02-24_at_15.07.08.png",
+            "title": "test 5",
+            "url": "",
+            "description": "test5"
+          }
+        },
+        "slide_9FbVJd": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/media-and-entertainment-bold-5-top.jpg",
+            "title": "test 4",
+            "url": "",
+            "description": "test4"
+          }
+        },
+        "slide_WKM8Fi": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2025-05-12_at_12.32.11_PM.png",
+            "title": "test 3",
+            "url": "",
+            "description": "test3"
+          }
+        },
+        "slide_WtyHK8": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2026-02-24_at_15.44.34.png",
+            "title": "test 2",
+            "url": "",
+            "description": "test 2"
+          }
+        },
+        "slide_RdA3iD": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2026-02-24_at_16.17.16.png",
+            "title": "test",
+            "url": "",
+            "description": "test"
+          }
+        }
+      },
+      "block_order": [
+        "slide_6TjbkU",
+        "slide_wzHdpn",
+        "slide_zne7bK",
+        "slide_9FbVJd",
+        "slide_WKM8Fi",
+        "slide_WtyHK8",
+        "slide_RdA3iD"
+      ],
+      "name": "Revolver Carousel",
+      "settings": {
+        "auto_rotate_direction": "left",
+        "auto_rotate_delay": 2000
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "revolver_carousel_LqBKdE"
   ]
 }

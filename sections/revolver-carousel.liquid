@@ -1,0 +1,264 @@
+{{ 'revolver.css' | asset_url | stylesheet_tag }}
+
+<div id="revolver-carousel" class="full-width">
+  {%- for block in section.blocks -%}
+    {%- if block.type == 'slide' -%}
+
+      {%- comment -%} Build content image list: slots image_2 … image_8 {%- endcomment -%}
+      {%- assign imgs_arr = '' -%}
+      {%- assign slot_ids = 'image_2,image_3,image_4,image_5,image_6,image_7,image_8' | split: ',' -%}
+      {%- for slot in slot_ids -%}
+        {%- assign slot_img = block.settings[slot] -%}
+        {%- if slot_img != blank -%}
+          {%- assign slot_url = slot_img | image_url: width: 1200 -%}
+          {%- unless imgs_arr == '' -%}{%- assign imgs_arr = imgs_arr | append: ',' -%}{%- endunless -%}
+          {%- assign imgs_arr = imgs_arr | append: slot_url -%}
+        {%- endif -%}
+      {%- endfor -%}
+
+      <a class="revolver-slide"
+         href="{{ block.settings.url | default: '#' }}"
+         data-title="{{ block.settings.title | escape }}"
+         data-desc="{{ block.settings.description | escape }}"
+         data-featured="{% if block.settings.image != blank %}{{ block.settings.image | image_url: width: 1200 }}{% endif %}"
+         data-imgs="{{ imgs_arr }}"
+         {{ block.shopify_attributes }}>
+        {%- if block.settings.image != blank -%}
+          <img src="{{ block.settings.image | image_url: width: 400 }}"
+               width="{{ block.settings.image.width }}"
+               height="{{ block.settings.image.height }}"
+               alt="{{ block.settings.image.alt | default: block.settings.title | escape }}">
+        {%- endif -%}
+      </a>
+    {%- endif -%}
+  {%- endfor -%}
+</div>
+
+<div class="carousel-end"></div>
+
+<script src="{{ 'revolver.js' | asset_url }}" defer></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var slides = [].slice.call(document.querySelectorAll('.revolver-slide'));
+    var carouselSection = document.getElementById('revolver-carousel').closest('.shopify-section');
+    var insertParent = carouselSection.parentNode;
+    var insertRef    = carouselSection.nextSibling;
+
+    slides.forEach(function (slide, idx) {
+      var title     = slide.dataset.title || (slide.querySelector('img') || {}).alt || '';
+      var desc      = slide.dataset.desc || '';
+      var featured  = slide.dataset.featured || '';
+      var extraImgs = (slide.dataset.imgs || '').split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+      var imgCards  = (featured ? [featured] : []).concat(extraImgs);
+      var totalCards = imgCards.length + (desc ? 1 : 0);
+      var n         = totalCards;
+      var curCard   = 0;
+      var busy      = false;
+
+      var projectSection = document.createElement('section');
+      projectSection.id        = 'project-' + idx;
+      projectSection.className = 'project-section';
+
+      var stage = document.createElement('div');
+      stage.className = 'detail-stage';
+
+      imgCards.forEach(function (src) {
+        var card = document.createElement('div');
+        card.className = 'detail-card';
+        var img = document.createElement('img');
+        img.src = src;
+        card.appendChild(img);
+        stage.appendChild(card);
+      });
+
+      if (desc) {
+        var infoCard = document.createElement('div');
+        infoCard.className = 'detail-card detail-card--text';
+        var descP = document.createElement('p');
+        descP.textContent = desc;
+        infoCard.appendChild(descP);
+        stage.appendChild(infoCard);
+      }
+
+      var bar = document.createElement('div');
+      bar.className = 'detail-bar';
+
+      var counter = document.createElement('span');
+      counter.className = 'detail-counter';
+
+      var infoLink = document.createElement('span');
+      infoLink.className   = 'detail-info-link';
+      infoLink.textContent = '– Info';
+
+      bar.appendChild(counter);
+      if (desc) bar.appendChild(infoLink);
+
+      projectSection.appendChild(stage);
+      projectSection.appendChild(bar);
+      insertParent.insertBefore(projectSection, insertRef);
+
+      function placeCards(animate) {
+        var cards = [].slice.call(stage.querySelectorAll('.detail-card'));
+        cards.forEach(function (card, i) {
+          var rel = (i - curCard + n) % n;
+          card.style.transition = animate ? 'transform 0.45s cubic-bezier(.4,0,.2,1)' : 'none';
+          if (rel === 0) {
+            card.style.transform = 'translateX(0)';     card.style.zIndex = '3';
+          } else if (rel === n - 1) {
+            card.style.transform = 'translateX(-105%)'; card.style.zIndex = '2';
+          } else {
+            card.style.transform = 'translateX(105%)';  card.style.zIndex = '1';
+          }
+        });
+      }
+
+      function updateCounter() {
+        var isInfo = desc && curCard === n - 1;
+        counter.textContent = isInfo
+          ? title
+          : (title ? title + '  ' : '') + (curCard + 1) + ' / ' + imgCards.length;
+      }
+
+      function go(dir) {
+        if (busy || n < 2) return;
+        busy    = true;
+        curCard = (curCard + dir + n) % n;
+        placeCards(true);
+        updateCounter();
+        setTimeout(function () { busy = false; }, 470);
+      }
+
+      stage.addEventListener('click', function () { go(1); });
+
+      infoLink.addEventListener('click', function () {
+        if (!desc) return;
+        busy    = true;
+        curCard = n - 1;
+        placeCards(true);
+        updateCounter();
+        setTimeout(function () { busy = false; }, 470);
+      });
+
+      placeCards(false);
+      updateCounter();
+    });
+
+    RevolverCarousel.init('#revolver-carousel', {
+      autoRotate      : '{{ section.settings.auto_rotate_direction }}',
+      autoRotateDelay : {{ section.settings.auto_rotate_delay }},
+      minScale        : 0.45,
+      speed           : 0.15,
+      reflHeight      : 56,
+      reflGap         : 2,
+      xRadiusFactor   : 0.30,
+      yRadiusFactor   : 0.21,
+      onSelect        : function (idx) {
+        var target = document.getElementById('project-' + idx);
+        if (!target) return;
+        window.scrollTo({ top: target.offsetTop, behavior: 'smooth' });
+      },
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Revolver Carousel",
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Carousel thumbnail"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "header",
+          "content": "Content images"
+        },
+        {
+          "type": "paragraph",
+          "content": "These appear in the slider below the carousel. The thumbnail above is always shown first."
+        },
+        {
+          "type": "image_picker",
+          "id": "image_2",
+          "label": "Image 2"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_3",
+          "label": "Image 3"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_4",
+          "label": "Image 4"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_5",
+          "label": "Image 5"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_6",
+          "label": "Image 6"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_7",
+          "label": "Image 7"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_8",
+          "label": "Image 8"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "select",
+      "id": "auto_rotate_direction",
+      "label": "Auto-rotate direction",
+      "options": [
+        { "value": "left",  "label": "Left"  },
+        { "value": "right", "label": "Right" },
+        { "value": "false", "label": "Off"   }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "auto_rotate_delay",
+      "label": "Auto-rotate speed (ms)",
+      "min": 1000,
+      "max": 5000,
+      "step": 200,
+      "default": 2000
+    }
+  ],
+  "presets": [
+    { "name": "Revolver Carousel" }
+  ]
+}
+{% endschema %}

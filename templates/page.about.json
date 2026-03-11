@@ -1,0 +1,73 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "about",
+      "blocks": {
+        "contact": {
+          "type": "contact",
+          "settings": {
+            "text": "<p>For inquiries, please contact <a href=\"mailto:hello@tuzun.co\">hello@tuzun.co</a>.</p>"
+          }
+        },
+        "pub-year-1": {
+          "type": "publication_year",
+          "settings": {
+            "year": "2024"
+          }
+        },
+        "pub-item-1": {
+          "type": "publication_item",
+          "settings": {
+            "text": "Publication title, Publisher"
+          }
+        },
+        "exh-header-solo": {
+          "type": "exhibition_header",
+          "settings": {
+            "title": "Solo Exhibitions"
+          }
+        },
+        "exh-year-1": {
+          "type": "exhibition_year",
+          "settings": {
+            "year": "2024"
+          }
+        },
+        "exh-item-1": {
+          "type": "exhibition_item",
+          "settings": {
+            "text": "Exhibition title, Gallery Name, City"
+          }
+        },
+        "exh-header-group": {
+          "type": "exhibition_header",
+          "settings": {
+            "title": "Group Exhibitions"
+          }
+        }
+      },
+      "block_order": [
+        "contact",
+        "pub-year-1",
+        "pub-item-1",
+        "exh-header-solo",
+        "exh-year-1",
+        "exh-item-1",
+        "exh-header-group"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

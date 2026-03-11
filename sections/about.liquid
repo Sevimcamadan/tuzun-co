@@ -1,0 +1,192 @@
+<div class="about">
+
+  {%- for block in section.blocks -%}
+    {%- if block.type == 'contact' -%}
+      <div class="about__contact" {{ block.shopify_attributes }}>
+        {{- block.settings.text -}}
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+
+  <div class="about__columns">
+
+    <div class="about__column about__column--left">
+      <h2 class="about__column-heading">Publications</h2>
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'publication_year' -%}
+          <p class="about__year" {{ block.shopify_attributes }}>{{ block.settings.year }}</p>
+        {%- elsif block.type == 'publication_item' -%}
+          <p class="about__item" {{ block.shopify_attributes }}>{{ block.settings.text }}</p>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    <div class="about__column about__column--right">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'exhibition_header' -%}
+          <h2 class="about__column-heading" {{ block.shopify_attributes }}>{{ block.settings.title }}</h2>
+        {%- elsif block.type == 'exhibition_year' -%}
+          <p class="about__year" {{ block.shopify_attributes }}>{{ block.settings.year }}</p>
+        {%- elsif block.type == 'exhibition_item' -%}
+          <p class="about__item" {{ block.shopify_attributes }}>{{ block.settings.text }}</p>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+  </div>
+</div>
+
+{% stylesheet %}
+  .about {
+    padding-top: calc(5rem + 4rem);
+    padding-bottom: 6rem;
+    padding-left: var(--page-margin);
+    padding-right: var(--page-margin);
+    max-width: var(--page-width);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .about__contact {
+    text-align: center;
+    max-width: 40ch;
+    margin: 0 auto 5rem;
+    font-size: 0.9rem;
+    line-height: 1.75;
+    color: #000;
+  }
+
+  .about__contact a {
+    color: inherit;
+  }
+
+  .about__columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  @media (max-width: 680px) {
+    .about__columns {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .about__column-heading {
+    font-size: 0.75rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #000;
+    margin-bottom: 1.5rem;
+    margin-top: 0;
+  }
+
+  .about__column--right .about__column-heading {
+    margin-top: 2rem;
+  }
+
+  .about__column--right .about__column-heading:first-child {
+    margin-top: 0;
+  }
+
+  .about__year {
+    font-size: 0.75rem;
+    color: #000;
+    opacity: 0.4;
+    margin: 1.25rem 0 0.25rem;
+  }
+
+  .about__item {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: #000;
+    margin: 0 0 0.1rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "About",
+  "blocks": [
+    {
+      "type": "contact",
+      "name": "Contact",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "t:labels.text",
+          "default": "<p>Contact information goes here.</p>"
+        }
+      ]
+    },
+    {
+      "type": "publication_year",
+      "name": "Publication Year",
+      "settings": [
+        {
+          "type": "text",
+          "id": "year",
+          "label": "t:labels.year"
+        }
+      ]
+    },
+    {
+      "type": "publication_item",
+      "name": "Publication",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "t:labels.text"
+        }
+      ]
+    },
+    {
+      "type": "exhibition_header",
+      "name": "Exhibition Category",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:labels.title",
+          "default": "Solo Exhibitions"
+        }
+      ]
+    },
+    {
+      "type": "exhibition_year",
+      "name": "Exhibition Year",
+      "settings": [
+        {
+          "type": "text",
+          "id": "year",
+          "label": "t:labels.year"
+        }
+      ]
+    },
+    {
+      "type": "exhibition_item",
+      "name": "Exhibition",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "t:labels.text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "About"
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

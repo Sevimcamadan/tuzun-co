@@ -1,0 +1,160 @@
+{%- if section.blocks.size > 0 -%}
+  <div class="scattered full-width">
+    <div class="scattered__canvas" id="scattered-canvas-{{ section.id }}">
+      {%- for block in section.blocks -%}
+
+        {%- if block.type == 'image' -%}
+          {%- assign scatter_image = block.settings.image -%}
+          {%- assign scatter_url   = block.settings.url | default: routes.root_url -%}
+          {%- assign scatter_alt   = block.settings.image.alt | default: '' -%}
+        {%- elsif block.type == 'product' -%}
+          {%- assign scatter_image = block.settings.product.featured_image -%}
+          {%- assign scatter_url   = block.settings.product.url -%}
+          {%- assign scatter_alt   = block.settings.product.featured_image.alt | default: block.settings.product.title -%}
+        {%- endif -%}
+
+        {%- if scatter_image != blank -%}
+          <a
+            class="scattered__item"
+            href="{{ scatter_url }}"
+            data-scatter-index="{{ forloop.index0 }}"
+            {{ block.shopify_attributes }}
+          >
+            {{-
+              scatter_image
+              | image_url: width: 800
+              | image_tag:
+                  loading: 'lazy',
+                  alt: scatter_alt,
+                  widths: '400, 600, 800'
+            -}}
+          </a>
+        {%- endif -%}
+
+      {%- endfor -%}
+    </div>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .scattered {
+    grid-column: 1 / -1;
+  }
+
+  .scattered__canvas {
+    position: relative;
+    width: 100%;
+    height: 100svh;
+    overflow: hidden;
+  }
+
+  .scattered__item {
+    position: absolute;
+    display: block;
+    text-decoration: none;
+    cursor: pointer;
+    transform: rotate(var(--scatter-r, 0deg));
+    transform-origin: center center;
+    transition: filter 0.2s ease;
+  }
+
+  .scattered__item:hover {
+    filter: brightness(0.92);
+    z-index: 50 !important;
+  }
+
+  .scattered__item img {
+    display: block;
+    width: 100%;
+    height: auto;
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none;
+  }
+
+  @media (max-width: 600px) {
+    .scattered__item {
+      width: 45vw !important;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function () {
+    function scatter(i) {
+      var h = i * 47;
+      return {
+        left:     5  + (h * 137 % 75),
+        top:      5  + (h * 53  % 70),
+        rotation: (h * 17  % 30) - 15,
+        width:    18 + (h * 11  % 12),
+        zIndex:   1  + (h * 7   % 9)
+      };
+    }
+
+    function applyScatter(canvas) {
+      var items = canvas.querySelectorAll('.scattered__item');
+      items.forEach(function (item, i) {
+        var p = scatter(i);
+        item.style.left   = p.left  + '%';
+        item.style.top    = p.top   + '%';
+        item.style.width  = p.width + 'vw';
+        item.style.zIndex = p.zIndex;
+        item.style.setProperty('--scatter-r', p.rotation + 'deg');
+      });
+    }
+
+    function init() {
+      document.querySelectorAll('[id^="scattered-canvas-"]').forEach(applyScatter);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Scattered Images",
+  "blocks": [
+    {
+      "type": "image",
+      "name": "t:general.image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:labels.image"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "t:labels.url"
+        }
+      ]
+    },
+    {
+      "type": "product",
+      "name": "t:general.product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "t:labels.product"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Scattered Images"
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}
