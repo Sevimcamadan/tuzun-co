@@ -9,7 +9,11 @@
       "Bash(shopify theme init:*)",
       "Bash(shopify theme dev:*)",
       "Bash(shopify theme push:*)",
-      "Bash(shopify theme list:*)"
+      "Bash(shopify theme list:*)",
+      "Bash(python3 -c \"from PIL import Image; img = Image.open\\(''c:/Repo/tuzun-co/assets/Tuzun-Logo.png''\\); print\\(img.size\\)\")",
+      "Bash(python -c \"from PIL import Image; img = Image.open\\(''c:/Repo/tuzun-co/assets/Tuzun-Logo.png''\\); print\\(img.size\\)\")",
+      "Bash(identify \"c:/Repo/tuzun-co/assets/Tuzun-Logo.png\")",
+      "Bash(powershell -Command \"\\(New-Object System.Drawing.Bitmap ''c:\\\\Repo\\\\tuzun-co\\\\assets\\\\Tuzun-Logo.png''\\) | Select Width,Height\")"
     ]
   }
 }

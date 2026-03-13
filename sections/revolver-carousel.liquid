@@ -1,5 +1,13 @@
 {{ 'revolver.css' | asset_url | stylesheet_tag }}
 
+<style>
+  @media (max-width: 767px) {
+    .shopify-section:has(#revolver-carousel) {
+      display: none;
+    }
+  }
+</style>
+
 <div id="revolver-carousel" class="full-width">
   {%- for block in section.blocks -%}
     {%- if block.type == 'slide' -%}

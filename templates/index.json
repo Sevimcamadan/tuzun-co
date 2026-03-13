@@ -16,80 +16,187 @@
     "revolver_carousel_LqBKdE": {
       "type": "revolver-carousel",
       "blocks": {
-        "slide_6TjbkU": {
+        "slide_HywJVg": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/media-and-entertainment-bold-4-top.jpg",
-            "title": "test 7",
+            "image": "shopify://shop_images/DSF0146_copy.jpg",
+            "title": "Aliana Rose Eyewear",
             "url": "",
-            "description": "Testing tüzün slider",
-            "image_2": "shopify://shop_images/media-and-entertainment-bold-1-top.jpg",
-            "image_3": "shopify://shop_images/media-and-entertainment-bold-2-middle.jpg"
+            "description": "",
+            "image_2": "shopify://shop_images/DSF0146_copy.jpg"
           }
         },
-        "slide_wzHdpn": {
+        "slide_KN4b4t": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Screenshot_2025-05-12_at_12.43.38_PM.png",
-            "title": "test 6",
+            "title": "",
             "url": "",
-            "description": "test6"
+            "description": ""
           }
         },
-        "slide_zne7bK": {
+        "slide_UA3hGK": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Screenshot_2026-02-24_at_15.07.08.png",
-            "title": "test 5",
+            "image": "shopify://shop_images/IMG_3220_1.jpg",
+            "title": "",
             "url": "",
-            "description": "test5"
-          }
-        },
-        "slide_9FbVJd": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/media-and-entertainment-bold-5-top.jpg",
-            "title": "test 4",
-            "url": "",
-            "description": "test4"
-          }
-        },
-        "slide_WKM8Fi": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Screenshot_2025-05-12_at_12.32.11_PM.png",
-            "title": "test 3",
-            "url": "",
-            "description": "test3"
+            "description": ""
           }
         },
         "slide_WtyHK8": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Screenshot_2026-02-24_at_15.44.34.png",
+            "image": "shopify://shop_images/IMG_6535_1_1.jpg",
             "title": "test 2",
             "url": "",
             "description": "test 2"
           }
         },
+        "slide_TPXDN6": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/IMG_0264_1.jpg",
+            "title": "",
+            "url": "",
+            "description": ""
+          }
+        },
+        "slide_Bz97J7": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/IMG_7163_1.jpg",
+            "title": "",
+            "url": "",
+            "description": ""
+          }
+        },
+        "slide_kg4fjT": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/IMG_0174_1.jpg",
+            "title": "",
+            "url": "",
+            "description": ""
+          }
+        },
+        "slide_PwLQzh": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/KUONA_06_1.jpg",
+            "title": "",
+            "url": "",
+            "description": ""
+          }
+        },
+        "slide_VWMNki": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/DSF0206_copy.jpg",
+            "title": "",
+            "url": "",
+            "description": ""
+          }
+        },
+        "slide_z3V4V3": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/IMG_0277_1.jpg",
+            "title": "",
+            "url": "",
+            "description": ""
+          }
+        },
+        "slide_nJbY6w": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/IMG_6219_0cc675cc-72ca-4273-b5b7-961e21b2a8f3.jpg",
+            "title": "",
+            "url": "",
+            "description": ""
+          }
+        },
+        "slide_itADLe": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/IMG_0174_1.jpg",
+            "title": "",
+            "url": "",
+            "description": ""
+          }
+        },
+        "slide_zne7bK": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/IMG_3487.jpg",
+            "title": "test 5",
+            "url": "",
+            "description": "test5"
+          }
+        },
+        "slide_dzd7Ld": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/IMG_2636_5811f6d2-0beb-47c3-9068-b0da80661662.jpg",
+            "title": "",
+            "url": "",
+            "description": ""
+          }
+        },
+        "slide_9FbVJd": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/DSCF1907_copy.jpg",
+            "title": "Kuona",
+            "url": "",
+            "description": "Kuona Website amd more"
+          }
+        },
+        "slide_WKM8Fi": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/IMG_8589_copy_3_d3db8335-a06e-4013-bd6a-3bebc1afa917.jpg",
+            "title": "test 3",
+            "url": "",
+            "description": "test3"
+          }
+        },
         "slide_RdA3iD": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Screenshot_2026-02-24_at_16.17.16.png",
+            "image": "shopify://shop_images/DSCF1796_copy.jpg",
             "title": "test",
             "url": "",
             "description": "test"
           }
+        },
+        "slide_PUtH8F": {
+          "type": "slide",
+          "settings": {
+            "title": "",
+            "url": "",
+            "description": ""
+          }
         }
       },
       "block_order": [
-        "slide_6TjbkU",
-        "slide_wzHdpn",
+        "slide_HywJVg",
+        "slide_KN4b4t",
+        "slide_UA3hGK",
+        "slide_WtyHK8",
+        "slide_TPXDN6",
+        "slide_Bz97J7",
+        "slide_kg4fjT",
+        "slide_PwLQzh",
+        "slide_VWMNki",
+        "slide_z3V4V3",
+        "slide_nJbY6w",
+        "slide_itADLe",
         "slide_zne7bK",
+        "slide_dzd7Ld",
         "slide_9FbVJd",
         "slide_WKM8Fi",
-        "slide_WtyHK8",
-        "slide_RdA3iD"
+        "slide_RdA3iD",
+        "slide_PUtH8F"
       ],
       "name": "Revolver Carousel",
       "settings": {

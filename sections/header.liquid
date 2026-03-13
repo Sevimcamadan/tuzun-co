@@ -1,18 +1,13 @@
 <header>
-  <a class="header__title" href="{{ routes.root_url }}">Tuzun</a>
-
-  {%- if section.settings.menu != blank -%}
-    <nav class="header__nav" aria-label="Main navigation">
-      {%- for link in section.settings.menu.links -%}
-        <a
-          class="header__nav-link{% if link.active %} is-active{% endif %}"
-          href="{{ link.url }}"
-        >
-          {{- link.title -}}
-        </a>
-      {%- endfor -%}
-    </nav>
-  {%- endif -%}
+  <a class="header__title" href="{{ routes.root_url }}">
+    <img
+      src="{{ 'Tuzun-Logo.png' | asset_url }}"
+      alt="Tuzun"
+      width="2732"
+      height="2048"
+      class="header__logo"
+    >
+  </a>
 </header>
 
 {% stylesheet %}
@@ -25,51 +20,32 @@
     height: 5rem;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     padding: 0 var(--page-margin);
     background: transparent;
   }
 
   .header__title {
-    font-size: 1rem;
-    font-weight: 400;
-    color: #000;
-    letter-spacing: 0.05em;
-    text-decoration: none;
-  }
-
-  .header__nav {
     display: flex;
-    gap: 2rem;
     align-items: center;
-  }
-
-  .header__nav-link {
-    font-size: 1rem;
-    font-weight: 400;
-    color: #000;
     text-decoration: none;
-    letter-spacing: 0.05em;
-    opacity: 0.7;
-    transition: opacity 0.15s ease;
   }
 
-  .header__nav-link:hover,
-  .header__nav-link.is-active {
-    opacity: 1;
+  .header__logo {
+    height: 3rem;
+    width: auto;
+    display: block;
+  }
+
+  @media (max-width: 767px) {
+    body {
+      padding-top: calc(5rem + 1.5rem);
+    }
   }
 {% endstylesheet %}
 
 {% schema %}
 {
   "name": "t:general.header",
-  "settings": [
-    {
-      "type": "link_list",
-      "id": "menu",
-      "label": "t:labels.menu",
-      "default": "main-menu"
-    }
-  ]
+  "settings": []
 }
 {% endschema %}
