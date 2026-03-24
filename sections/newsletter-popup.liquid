@@ -102,8 +102,13 @@
     margin-bottom: 0;
   }
 
-  .tz-popup-row .tz-popup-field {
+  .tz-popup-row-field {
     flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .tz-popup-row-field .tz-popup-field {
+    width: 100%;
   }
 
   .tz-popup-field {
@@ -124,6 +129,38 @@
 
   .tz-popup-field:focus { border-color: #111; }
   .tz-popup-field::placeholder { color: #aaa; }
+
+  .tz-popup-field.is-invalid {
+    border-color: #dc2626;
+  }
+
+  .tz-field-error {
+    display: none;
+    font-family: 'Aileron', sans-serif;
+    font-size: 0.75rem;
+    color: #dc2626;
+    margin-top: -6px;
+    margin-bottom: 8px;
+    letter-spacing: 0.01em;
+  }
+
+  .tz-field-error.is-visible {
+    display: block;
+  }
+
+  #tz-submit-error {
+    display: none;
+    font-family: 'Aileron', sans-serif;
+    font-size: 0.8rem;
+    color: #dc2626;
+    text-align: center;
+    margin-top: 8px;
+    letter-spacing: 0.01em;
+  }
+
+  #tz-submit-error.is-visible {
+    display: block;
+  }
 
   textarea.tz-popup-field {
     resize: none;
@@ -176,6 +213,9 @@
       flex-direction: column;
       gap: 0;
     }
+    .tz-popup-row-field {
+      width: 100%;
+    }
   }
 </style>
 
@@ -210,18 +250,26 @@
         <p>{{ section.settings.subtext | default: "Tell us about your project. We'll be in touch within 48 hours." }}</p>
 
         <div class="tz-popup-row">
-          <input class="tz-popup-field" type="text" id="tz-first-name" placeholder="First name" autocomplete="given-name">
-          <input class="tz-popup-field" type="text" id="tz-last-name" placeholder="Last name" autocomplete="family-name">
+          <div class="tz-popup-row-field">
+            <input class="tz-popup-field" type="text" id="tz-first-name" placeholder="First name" autocomplete="given-name">
+            <span class="tz-field-error" id="tz-first-name-error">First name is required.</span>
+          </div>
+          <div class="tz-popup-row-field">
+            <input class="tz-popup-field" type="text" id="tz-last-name" placeholder="Last name" autocomplete="family-name">
+          </div>
         </div>
 
         <input class="tz-popup-field" type="text" id="tz-brand" placeholder="Brand / Agency" autocomplete="organization">
         <input class="tz-popup-field" type="email" id="tz-email" placeholder="Email address" autocomplete="email">
+        <span class="tz-field-error" id="tz-email-error">A valid email address is required.</span>
 
         <textarea class="tz-popup-field" id="tz-message" placeholder="What would you like to discuss?"></textarea>
+        <span class="tz-field-error" id="tz-message-error">Please tell us what you'd like to discuss.</span>
 
         <button class="tz-popup-btn" id="tz-popup-submit">
           {{ section.settings.button_label | default: 'Start the Conversation' }}
         </button>
+        <span id="tz-submit-error">Something went wrong. Please try again.</span>
       </div>
 
       <div id="tz-popup-success">
@@ -255,16 +303,54 @@
 
     closeBtn.addEventListener('click', closePopup);
 
-    submitBtn.addEventListener('click', function () {
-      var first   = document.getElementById('tz-first-name').value.trim();
-      var last    = document.getElementById('tz-last-name').value.trim();
-      var email   = document.getElementById('tz-email').value.trim();
-      var message = document.getElementById('tz-message').value.trim();
-
-      if (!first || !email || !message) {
-        alert('Please fill in your first name, email, and message.');
-        return;
+    function setError(fieldId, errorId, condition) {
+      var field = document.getElementById(fieldId);
+      var error = document.getElementById(errorId);
+      if (condition) {
+        field.classList.add('is-invalid');
+        error.classList.add('is-visible');
+        return true;
+      } else {
+        field.classList.remove('is-invalid');
+        error.classList.remove('is-visible');
+        return false;
       }
+    }
+
+    function clearErrors() {
+      ['tz-first-name', 'tz-email', 'tz-message'].forEach(function (id) {
+        document.getElementById(id).classList.remove('is-invalid');
+      });
+      ['tz-first-name-error', 'tz-email-error', 'tz-message-error'].forEach(function (id) {
+        document.getElementById(id).classList.remove('is-visible');
+      });
+      document.getElementById('tz-submit-error').classList.remove('is-visible');
+    }
+
+    ['tz-first-name', 'tz-email', 'tz-message'].forEach(function (id) {
+      document.getElementById(id).addEventListener('input', function () {
+        this.classList.remove('is-invalid');
+        var errorEl = document.getElementById(id + '-error');
+        if (errorEl) errorEl.classList.remove('is-visible');
+      });
+    });
+
+    submitBtn.addEventListener('click', function () {
+      var firstEl   = document.getElementById('tz-first-name');
+      var emailEl   = document.getElementById('tz-email');
+      var messageEl = document.getElementById('tz-message');
+
+      var first   = firstEl.value.trim();
+      var email   = emailEl.value.trim();
+      var message = messageEl.value.trim();
+      var emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+      var hasError = false;
+      hasError = setError('tz-first-name', 'tz-first-name-error', !first)   || hasError;
+      hasError = setError('tz-email',      'tz-email-error',      !emailValid) || hasError;
+      hasError = setError('tz-message',    'tz-message-error',    !message)  || hasError;
+
+      if (hasError) return;
 
       var SHEET_URL = 'https://script.google.com/macros/s/AKfycbw-o6v9NGo8L-9Q2c_w0tYMx7QhDtOeB6H9zNVsf6kiQ2AmooNIvKs_SpjBIaph-k7NAA/exec';
       var originalLabel = submitBtn.textContent;
@@ -291,7 +377,7 @@
       .catch(function () {
         submitBtn.disabled    = false;
         submitBtn.textContent = originalLabel;
-        alert('Something went wrong. Please try again.');
+        document.getElementById('tz-submit-error').classList.add('is-visible');
       });
     });
 
