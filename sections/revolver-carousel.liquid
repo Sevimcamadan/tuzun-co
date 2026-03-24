@@ -1,10 +1,76 @@
 {{ 'revolver.css' | asset_url | stylesheet_tag }}
 
 <style>
+  @font-face {
+    font-family: 'Acumin Pro Wide';
+    src: url('{{ 'acumin-pro-wide-regular.woff2' | asset_url }}') format('woff2'),
+         url('{{ 'acumin-pro-wide-regular.woff' | asset_url }}') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Aileron';
+    src: url('{{ 'Aileron-Regular.woff2' | asset_url }}') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Aileron';
+    src: url('{{ 'Aileron-UltraLight.woff2' | asset_url }}') format('woff2');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+  }
+
   @media (max-width: 767px) {
     .shopify-section:has(#revolver-carousel) {
       display: none;
     }
+  }
+
+  /* Cap carousel height so it doesn't leave a large void below the images */
+  #revolver-carousel {
+    height: 72vh;
+  }
+
+  @media (min-width: 1280px) {
+    #revolver-carousel {
+      height: 65vh;
+    }
+  }
+
+  @media (min-width: 1600px) {
+    #revolver-carousel {
+      height: 60vh;
+    }
+  }
+
+  .carousel-tagline {
+    text-align: center;
+    padding: 60px 24px 60px;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .carousel-tagline__headline {
+    font-family: 'Acumin Pro Wide', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 400;
+    margin: 0 0 16px;
+    letter-spacing: 0.01em;
+  }
+
+  .carousel-tagline__body {
+    font-family: 'Aileron', sans-serif;
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+    opacity: 0.9;
   }
 </style>
 
@@ -41,6 +107,17 @@
     {%- endif -%}
   {%- endfor -%}
 </div>
+
+{%- if section.settings.tagline != blank or section.settings.tagline_body != blank -%}
+<div class="carousel-tagline">
+  {%- if section.settings.tagline != blank -%}
+    <p class="carousel-tagline__headline">{{ section.settings.tagline }}</p>
+  {%- endif -%}
+  {%- if section.settings.tagline_body != blank -%}
+    <p class="carousel-tagline__body">{{ section.settings.tagline_body }}</p>
+  {%- endif -%}
+</div>
+{%- endif -%}
 
 <div class="carousel-end"></div>
 
@@ -263,6 +340,22 @@
       "max": 5000,
       "step": 200,
       "default": 2000
+    },
+    {
+      "type": "header",
+      "content": "Tagline text"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Headline",
+      "default": "Culture isn't a trend, it's a language."
+    },
+    {
+      "type": "textarea",
+      "id": "tagline_body",
+      "label": "Body text",
+      "default": "At TÜZÜN, we decode it, design within it, and create brands that move with intention across borders"
     }
   ],
   "presets": [

@@ -1,0 +1,334 @@
+<style>
+  #tz-popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
+
+  #tz-popup-overlay.is-visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  #tz-popup {
+    position: relative;
+    display: flex;
+    width: min(860px, 94vw);
+    max-height: 92vh;
+    background: #fff;
+    overflow: hidden;
+  }
+
+  /* ── Left image column ── */
+  #tz-popup-image {
+    flex: 0 0 42%;
+    background: #e8e4df;
+    overflow: hidden;
+  }
+
+  #tz-popup-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  /* ── Right form column ── */
+  #tz-popup-body {
+    flex: 1 1 auto;
+    padding: 44px 40px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow-y: auto;
+  }
+
+  #tz-popup-close {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+    color: #111;
+    padding: 4px;
+    z-index: 1;
+  }
+
+  #tz-popup-close:hover { opacity: 0.45; }
+
+  #tz-popup-logo {
+    display: block;
+    width: 68px;
+    margin: 0 auto 22px;
+  }
+
+  #tz-popup-content h2 {
+    font-family: 'Acumin Pro Wide', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    line-height: 1.15;
+    color: #111;
+    margin: 0 0 10px;
+    text-align: center;
+  }
+
+  #tz-popup-content p {
+    font-family: 'Aileron', sans-serif;
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: #666;
+    margin: 0 0 24px;
+    letter-spacing: 0.02em;
+    text-align: center;
+  }
+
+  /* Two-column row for first/last name */
+  .tz-popup-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 0;
+  }
+
+  .tz-popup-row .tz-popup-field {
+    flex: 1 1 0;
+  }
+
+  .tz-popup-field {
+    display: block;
+    width: 100%;
+    border: 1.5px solid #ccc;
+    outline: none;
+    padding: 11px 13px;
+    font-family: 'Aileron', sans-serif;
+    font-size: 0.85rem;
+    color: #111;
+    background: transparent;
+    margin-bottom: 10px;
+    border-radius: 0;
+    text-align: left;
+    box-sizing: border-box;
+  }
+
+  .tz-popup-field:focus { border-color: #111; }
+  .tz-popup-field::placeholder { color: #aaa; }
+
+  textarea.tz-popup-field {
+    resize: none;
+    height: 88px;
+    line-height: 1.5;
+  }
+
+  .tz-popup-btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background: #111;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-family: 'Aileron', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    transition: background 0.2s;
+    margin-top: 6px;
+  }
+
+  .tz-popup-btn:hover { background: #333; }
+
+  #tz-popup-success {
+    display: none;
+    text-align: center;
+    padding: 20px 0 10px;
+  }
+
+  #tz-popup-success p {
+    font-family: 'Aileron', sans-serif;
+    font-size: 0.9rem;
+    color: #111;
+    margin: 0;
+    letter-spacing: 0.03em;
+  }
+
+  /* Mobile: hide image column */
+  @media (max-width: 599px) {
+    #tz-popup-image {
+      display: none;
+    }
+    #tz-popup-body {
+      padding: 40px 22px 32px;
+    }
+    .tz-popup-row {
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+</style>
+
+<div id="tz-popup-overlay" aria-modal="true" role="dialog">
+  <div id="tz-popup">
+
+    <button id="tz-popup-close" aria-label="Close">&#x2715;</button>
+
+    {%- if section.settings.image != blank -%}
+      <div id="tz-popup-image">
+        {{
+          section.settings.image
+          | image_url: width: 800
+          | image_tag:
+            loading: 'eager',
+            alt: section.settings.image.alt | default: 'TÜZÜN',
+            widths: '400, 600, 800'
+        }}
+      </div>
+    {%- endif -%}
+
+    <div id="tz-popup-body">
+      <img
+        id="tz-popup-logo"
+        src="{{ 'Tuzun-Logo.png' | asset_url }}"
+        alt="TÜZÜN"
+        width="68"
+        height="auto">
+
+      <div id="tz-popup-content">
+        <h2>{{ section.settings.heading | default: "Let's Work Together" }}</h2>
+        <p>{{ section.settings.subtext | default: "Tell us about your project. We'll be in touch within 48 hours." }}</p>
+
+        <div class="tz-popup-row">
+          <input class="tz-popup-field" type="text" id="tz-first-name" placeholder="First name" autocomplete="given-name">
+          <input class="tz-popup-field" type="text" id="tz-last-name" placeholder="Last name" autocomplete="family-name">
+        </div>
+
+        <input class="tz-popup-field" type="text" id="tz-brand" placeholder="Brand / Agency" autocomplete="organization">
+        <input class="tz-popup-field" type="email" id="tz-email" placeholder="Email address" autocomplete="email">
+
+        <textarea class="tz-popup-field" id="tz-message" placeholder="What would you like to discuss?"></textarea>
+
+        <button class="tz-popup-btn" id="tz-popup-submit">
+          {{ section.settings.button_label | default: 'Start the Conversation' }}
+        </button>
+      </div>
+
+      <div id="tz-popup-success">
+        <p>Thank you — we'll be in touch shortly.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  (function () {
+    var overlay   = document.getElementById('tz-popup-overlay');
+    var popup     = document.getElementById('tz-popup');
+    var closeBtn  = document.getElementById('tz-popup-close');
+    var submitBtn = document.getElementById('tz-popup-submit');
+    var form      = document.getElementById('tz-popup-content');
+    var success   = document.getElementById('tz-popup-success');
+
+    function openPopup() {
+      overlay.classList.add('is-visible');
+    }
+
+    function closePopup() {
+      overlay.classList.remove('is-visible');
+    }
+
+    overlay.addEventListener('click', function (e) {
+      if (!popup.contains(e.target)) closePopup();
+    });
+
+    closeBtn.addEventListener('click', closePopup);
+
+    submitBtn.addEventListener('click', function () {
+      var first   = document.getElementById('tz-first-name').value.trim();
+      var last    = document.getElementById('tz-last-name').value.trim();
+      var email   = document.getElementById('tz-email').value.trim();
+      var message = document.getElementById('tz-message').value.trim();
+
+      if (!first || !email || !message) {
+        alert('Please fill in your first name, email, and message.');
+        return;
+      }
+
+      var SHEET_URL = 'https://script.google.com/macros/s/AKfycbw-o6v9NGo8L-9Q2c_w0tYMx7QhDtOeB6H9zNVsf6kiQ2AmooNIvKs_SpjBIaph-k7NAA/exec';
+      var originalLabel = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+
+      fetch(SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName: first,
+          lastName:  document.getElementById('tz-last-name').value.trim(),
+          brand:     document.getElementById('tz-brand').value.trim(),
+          email:     email,
+          message:   message
+        })
+      })
+      .then(function () {
+        form.style.display    = 'none';
+        success.style.display = 'block';
+        setTimeout(closePopup, 3000);
+      })
+      .catch(function () {
+        submitBtn.disabled    = false;
+        submitBtn.textContent = originalLabel;
+        alert('Something went wrong. Please try again.');
+      });
+    });
+
+    setTimeout(openPopup, 400);
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Contact Popup",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Popup image"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Let's Work Together"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Tell us about your project. We'll be in touch within 48 hours."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Start the Conversation"
+    }
+  ],
+  "presets": [
+    { "name": "Contact Popup" }
+  ]
+}
+{% endschema %}

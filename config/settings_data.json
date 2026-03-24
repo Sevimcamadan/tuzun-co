@@ -8,5 +8,19 @@
  * ------------------------------------------------------------
  */
 {
-  "current": {}
+  "current": {
+    "sections": {
+      "newsletter-popup": {
+        "type": "newsletter-popup",
+        "settings": {
+          "image": "shopify://shop_images/DSF0206_copy.jpg",
+          "heading": "Be the first to know",
+          "subtext": "About our latest work and exclusive updates.",
+          "email_placeholder": "Email address",
+          "button_label": "Sign up"
+        }
+      }
+    },
+    "content_for_index": []
+  }
 }
